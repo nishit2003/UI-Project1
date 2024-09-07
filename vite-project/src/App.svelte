@@ -1,4 +1,13 @@
 <script>
+    import { tweened } from 'svelte/motion';
+    import { cubicOut } from 'svelte/easing';
+
+    // Tweened value for water intake progress
+    const progress = tweened(0, {
+        duration: 400,
+        easing: cubicOut
+    });
+
     // Mock user data
     let user = {
         name: "Nishit Grover",
@@ -14,22 +23,23 @@
     
     // Activities
     let feelings = [
-    { mood: "Happy", checked: false },
-    { mood: "Relaxed", checked: false },
-    { mood: "Energized", checked: false },
-    { mood: "Motivated", checked: false },
-    { mood: "Grateful", checked: false },
-    { mood: "Focused", checked: false },
-    { mood: "Anxious", checked: false },
-    { mood: "Sad", checked: false },
-    { mood: "Stressed", checked: false },
-    { mood: "Excited", checked: false },
-    { mood: "Calm", checked: false },
-    { mood: "Frustrated", checked: false }
+        { mood: "Happy", checked: false },
+        { mood: "Relaxed", checked: false },
+        { mood: "Energized", checked: false },
+        { mood: "Motivated", checked: false },
+        { mood: "Grateful", checked: false },
+        { mood: "Focused", checked: false },
+        { mood: "Anxious", checked: false },
+        { mood: "Sad", checked: false },
+        { mood: "Stressed", checked: false },
+        { mood: "Excited", checked: false },
+        { mood: "Calm", checked: false },
+        { mood: "Frustrated", checked: false }
     ];
 
     let image = "";  // Placeholder for image uploads
     let yogaDuration = 0;  // Duration for yoga
+    let didYoga = false; // Track whether the user did yoga today
     let waterIntake = 0;  // Number of glasses of water
     let dailyReflection = "";  // Text input for journaling
     let skillPractice = 0;  // Number input for time spent practicing a skill
@@ -37,6 +47,11 @@
     // Function to handle saving
     function saveEntries() {
         alert("Entries saved successfully!");
+    }
+
+    // Function to set water intake percentage based on user input
+    function setWaterIntake(percentage) {
+        progress.set(percentage);
     }
 </script>
 
@@ -74,15 +89,34 @@
         <!-- Yoga Duration -->
         <div class="yoga-duration">
             <h3>Did you practice yoga today?</h3>
-            <label for="yoga">Yoga Duration (minutes):</label>
-            <input type="number" id="yoga" bind:value={yogaDuration} min="0">
+            <label>
+                <input type="radio" bind:group={didYoga} value={true}> Yes
+            </label>
+            <label>
+                <input type="radio" bind:group={didYoga} value={false}> No
+            </label>
+
+            {#if didYoga}
+                <div class="yoga-slider">
+                    <label for="yoga">Yoga Duration (minutes):</label>
+                    <input type="range" id="yoga" bind:value={yogaDuration} min="0" max="100" step="5" style="width: 80%">
+                    <p>You've done {yogaDuration} minutes of yoga today.</p>
+                </div>
+            {/if}
         </div>
 
-        <!-- Water Intake -->
+        <!-- Water Intake Progress Bar -->
         <div class="water-intake">
-            <h3>Water Intake</h3>
-            <label for="water">Glasses of water:</label>
-            <input type="number" id="water" bind:value={waterIntake} min="0">
+            <h3>How much water did you drink today?</h3>
+            <progress value={$progress} max="1"></progress>
+
+            <div class="water-buttons">
+                <button on:click={() => setWaterIntake(0)}> 0L </button>
+                <button on:click={() => setWaterIntake(0.25)}> 1L </button>
+                <button on:click={() => setWaterIntake(0.5)}> 2L </button>
+                <button on:click={() => setWaterIntake(0.75)}> 3L </button>
+                <button on:click={() => setWaterIntake(1)}> 4L </button>
+            </div>
         </div>
 
         <!-- Daily Reflection -->
@@ -95,7 +129,7 @@
         <div class="skill-practice">
             <h3>Skill Practice</h3>
             <label for="skill">Time spent practicing a skill (hours):</label>
-            <input type="number" id="skill" bind:value={skillPractice} min="0">
+            <input type="number" id="skill" bind:value={skillPractice} min="0" max="24">
         </div>
 
         <!-- Save Button -->
@@ -193,5 +227,21 @@
 
     input[type="checkbox"] {
         margin-right: 0.5rem;
+    }
+
+    .yoga-duration {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Water Intake */
+    .water-buttons button {
+        margin-right: 10px;
+    }
+
+    progress {
+        display: block;
+        width: 100%;
+        height: 20px;
+        margin-bottom: 1rem;
     }
 </style>
