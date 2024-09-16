@@ -1,247 +1,157 @@
 <script>
-    import { tweened } from 'svelte/motion';
-    import { cubicOut } from 'svelte/easing';
+    import Login from './components/Login.svelte';
+    import Feelings from './components/Feelings.svelte';
+    import ImageUpload from './components/ImageUpload.svelte';
+    import Reflection from './components/Reflection.svelte';
+    import SkillPractice from './components/SkillPractice.svelte';
+    import UserInfo from './components/UserInfo.svelte';
+    import WaterIntake from './components/WaterIntake.svelte';
+    import YogaDuration from './components/YogaDuration.svelte';
 
-    // Tweened value for water intake progress
-    const progress = tweened(0, {
-        duration: 400,
-        easing: cubicOut
-    });
+    let loggedIn = false;  // Track if user is logged in
+    let user = { username: '', startDate: new Date() };
+    let currentDate = new Date();  // Current date for user information
+    let selectedDate = new Date();  // Default is today's date
+    let daysActive = 15;
 
-    // Mock user data
-    let user = {
-        name: "Nishit Grover",
-        startDate: new Date("2024-09-04"),
-        activeDays: 0, 
-    };
-    
-    let currentDate = new Date();
-    let startDate = new Date("2024-09-04");
-    
-    // Calculate days active
-    let daysActive = Math.ceil((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-    // Activities
+    // Journal Data
     let feelings = [
-        { mood: "Happy", checked: false },
-        { mood: "Relaxed", checked: false },
-        { mood: "Energized", checked: false },
-        { mood: "Motivated", checked: false },
-        { mood: "Grateful", checked: false },
-        { mood: "Focused", checked: false },
-        { mood: "Anxious", checked: false },
-        { mood: "Sad", checked: false },
-        { mood: "Stressed", checked: false },
-        { mood: "Excited", checked: false },
-        { mood: "Calm", checked: false },
-        { mood: "Frustrated", checked: false }
+        { mood: 'Happy', checked: false },
+        { mood: 'Sad', checked: false },
+        { mood: 'Excited', checked: false },
+        { mood: 'Anxious', checked: false },
+        { mood: 'Calm', checked: false },
+        { mood: 'Frustrated', checked: false },
+        { mood: 'Grateful', checked: false },
+        { mood: 'Lonely', checked: false },
+        { mood: 'Motivated', checked: false },
+        { mood: 'Tired', checked: false },
+        { mood: 'Confident', checked: false },
+        { mood: 'Bored', checked: false }
     ];
+    let image = '';
+    let dailyReflection = '';
+    let skillPractice = 0;
+    let didYoga = false;
+    let yogaDuration = 0;
+    let waterIntake = 0;
 
-    let image = "";  // Placeholder for image uploads
-    let yogaDuration = 0;  // Duration for yoga
-    let didYoga = false; // Track whether the user did yoga today
-    let waterIntake = 0;  // Number of glasses of water
-    let dailyReflection = "";  // Text input for journaling
-    let skillPractice = 0;  // Number input for time spent practicing a skill
-    
-    // Function to handle saving
-    function saveEntries() {
-        alert("Entries saved successfully!");
-    }
+    // Helper function to format date as YYYY-MM-DD for input value
+    const formatDateForInput = (date) => {
+        return date.toISOString().split('T')[0];
+    };
 
-    // Function to set water intake percentage based on user input
-    function setWaterIntake(percentage) {
-        progress.set(percentage);
-    }
+    // Handle login success and retrieve stored data
+    const onLoginSuccess = (username) => {
+        user.username = username;  // Assign username after login
+        loggedIn = true;
+        retrieveJournalData();  // Retrieve previously saved journal data for the selected date
+    };
+
+    // Update journal data based on selected date
+    const onDateChange = (event) => {
+        selectedDate = new Date(event.target.value);
+        retrieveJournalData();  // Load journal data for the newly selected date
+    };
+
+    // Save journal data in localStorage for the selected date
+    const saveJournalData = () => {
+        const journalData = {
+            feelings,
+            image,
+            dailyReflection,
+            skillPractice,
+            didYoga,
+            yogaDuration,
+            waterIntake
+        };
+
+        // Store the data in localStorage with the user's name and the selected date as key
+        const formattedDate = selectedDate.toDateString();
+        localStorage.setItem(user.username + '_journal_' + formattedDate, JSON.stringify(journalData));
+        alert('Journal saved successfully for ' + formattedDate + '!');
+    };
+
+    // Retrieve journal data from localStorage and populate the fields for the selected date
+    const retrieveJournalData = () => {
+        const formattedDate = selectedDate.toDateString();
+        const savedJournalData = localStorage.getItem(user.username + '_journal_' + formattedDate);
+
+        if (savedJournalData) {
+            const journalData = JSON.parse(savedJournalData);
+
+            // Restore all fields with the saved data
+            feelings = journalData.feelings || feelings;
+            image = journalData.image || '';
+            dailyReflection = journalData.dailyReflection || '';
+            skillPractice = journalData.skillPractice || 0;
+            didYoga = journalData.didYoga || false;
+            yogaDuration = journalData.yogaDuration || 0;
+            waterIntake = journalData.waterIntake || 0;
+        } else {
+            // If no data for the selected date, reset the fields
+            feelings.forEach(feeling => feeling.checked = false);
+            image = '';
+            dailyReflection = '';
+            skillPractice = 0;
+            didYoga = false;
+            yogaDuration = 0;
+            waterIntake = 0;
+        }
+    };
 </script>
 
 <main>
-    <!-- User Information -->
-    <section class="user-info">
-        <h1>Hello, {user.name}</h1>
-        <p class="date">Date: {currentDate.toDateString()}</p>
-        <p> User started on {user.startDate.toDateString()}</p>
-        <p class="active-days">Days Active: {daysActive} </p>
-    </section>
-
-    <!-- Activity Tracking -->
-    <section class="activity-tracking">
-        <h2>Track your activities</h2>
-        
-        <!-- Feelings (Checkboxes) -->
-        <div class="feelings">
-            <h3>How are you feeling today?</h3>
-            {#each feelings as feeling, index}
-                <label>
-                    <input type="checkbox" bind:checked={feelings[index].checked}>
-                    {feeling.mood}
-                </label>
-            {/each}
-        </div>
-        
-        <!-- Image Upload -->
-        <div class="image-upload and caption entry">
-            <h3>Upload a picture and write a caption</h3>
-            <input type="file" bind:value={image} accept="image/*">
-            <textarea bind:value={dailyReflection} placeholder="Talk something about the picture"></textarea>
-        </div>
-        
-        <!-- Yoga Duration -->
-        <div class="yoga-duration">
-            <h3>Did you practice yoga today?</h3>
-            <label>
-                <input type="radio" bind:group={didYoga} value={true}> Yes
-            </label>
-            <label>
-                <input type="radio" bind:group={didYoga} value={false}> No
-            </label>
-
-            {#if didYoga}
-                <div class="yoga-slider">
-                    <label for="yoga">Yoga Duration (minutes):</label>
-                    <input type="range" id="yoga" bind:value={yogaDuration} min="0" max="100" step="5" style="width: 80%">
-                    <p>You've done {yogaDuration} minutes of yoga today.</p>
-                </div>
-            {/if}
+    {#if loggedIn}
+        <!-- Date picker to select the date for the journal -->
+        <div class="date-picker">
+            <label for="journal-date">Select a date:</label>
+            <input type="date" id="journal-date" value={formatDateForInput(selectedDate)} on:change={onDateChange}>
         </div>
 
-        <!-- Water Intake Progress Bar -->
-        <div class="water-intake">
-            <h3>How much water did you drink today?</h3>
-            <progress value={$progress} max="1"></progress>
+        <!-- Main page with all journal components -->
+        <UserInfo {user} {currentDate} {daysActive} />
+        <Feelings {feelings} />
+        <ImageUpload bind:image  />
+        <Reflection bind:dailyReflection />
+        <SkillPractice bind:skillPractice />
+        <YogaDuration bind:didYoga bind:yogaDuration />
+        <WaterIntake bind:waterIntake />
 
-            <div class="water-buttons">
-                <button on:click={() => setWaterIntake(0)}> 0L </button>
-                <button on:click={() => setWaterIntake(0.25)}> 1L </button>
-                <button on:click={() => setWaterIntake(0.5)}> 2L </button>
-                <button on:click={() => setWaterIntake(0.75)}> 3L </button>
-                <button on:click={() => setWaterIntake(1)}> 4L </button>
-            </div>
-        </div>
+        <!-- Submit button to save journal data -->
+        <button on:click={saveJournalData}>Submit</button>
+    {/if}
 
-        <!-- Daily Reflection -->
-        <div class="daily-reflection">
-            <h3>Today's Reflection</h3>
-            <textarea bind:value={dailyReflection} placeholder="What did you do today?"></textarea>
-        </div>
-
-        <!-- Skill Practice -->
-        <div class="skill-practice">
-            <h3>Skill Practice</h3>
-            <label for="skill">Time spent practicing a skill (hours):</label>
-            <input type="number" id="skill" bind:value={skillPractice} min="0" max="24">
-        </div>
-
-        <!-- Save Button -->
-        <button on:click={saveEntries}>Save</button>
-    </section>
+    {#if !loggedIn}
+        <!-- Show login if user is not logged in -->
+        <Login on:login={onLoginSuccess} />
+    {/if}
 </main>
 
 <style>
-    :global(body) {
-        background-color: #f0f4f8;
-        font-family: 'Arial', sans-serif;
-        color: #333;
-        margin: 0;
-        padding: 0;
-    }
-
     main {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    section {
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid #eee;
-    }
-
-    h1, h2, h3 {
-        color: #6200ee;
-        margin-bottom: 0.5rem;
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    h3 {
-        font-size: 1.2rem;
-    }
-
-    .user-info {
-        text-align: center;
-    }
-
-    .user-info .date, .user-info .active-days {
-        font-size: 1.1rem;
-        margin-top: 0.5rem;
-    }
-
-    .activity-tracking label, .activity-tracking textarea {
-        display: block;
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    input[type="file"], input[type="number"], textarea {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        margin-top: 0.25rem;
-    }
-
-    textarea {
-        min-height: 100px;
+        font-family: Arial, sans-serif;
+        margin: 2rem;
     }
 
     button {
-        background-color: #6200ee;
-        color: white;
         padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        color: white;
+        background-color: #007bff;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.3s;
+        margin-top: 1rem;
     }
 
-    button:hover {
-        background-color: #3700b3;
-    }
-
-    .feelings label {
-        display: inline-block;
-        margin-right: 1rem;
-    }
-
-    input[type="checkbox"] {
-        margin-right: 0.5rem;
-    }
-
-    .yoga-duration {
+    .date-picker {
         margin-bottom: 1.5rem;
     }
 
-    /* Water Intake */
-    .water-buttons button {
-        margin-right: 10px;
-    }
-
-    progress {
-        display: block;
-        width: 100%;
-        height: 20px;
-        margin-bottom: 1rem;
+    .date-picker input {
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
     }
 </style>
