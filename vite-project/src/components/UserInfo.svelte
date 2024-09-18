@@ -6,7 +6,7 @@
 
 <section class="user-info">
     <!-- Use user.username or whichever property stores the username -->
-    <h1>Hello, {user.username}</h1>
+    <h1>Hello, User</h1>
     <p class="date">Date: {currentDate.toDateString()}</p>
     <p> User started on {user.startDate.toDateString()}</p>
     <p class="active-days">Days Active: {daysActive} </p>

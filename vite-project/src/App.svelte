@@ -4,9 +4,10 @@
     import ImageUpload from './components/ImageUpload.svelte';
     import Reflection from './components/Reflection.svelte';
     import SkillPractice from './components/SkillPractice.svelte';
+    import YogaDuration from './components/YogaDuration.svelte';
     import UserInfo from './components/UserInfo.svelte';
     import WaterIntake from './components/WaterIntake.svelte';
-    import YogaDuration from './components/YogaDuration.svelte';
+    import ProductivityChart from './components/ProductivityChart.svelte';  // Import the chart component
 
     let loggedIn = false;  // Track if user is logged in
     let user = { username: '', startDate: new Date() };
@@ -36,6 +37,9 @@
     let yogaDuration = 0;
     let waterIntake = 0;
 
+    // Productivity data for chart
+    let productivityData = [skillPractice, yogaDuration, waterIntake];
+
     // Helper function to format date as YYYY-MM-DD for input value
     const formatDateForInput = (date) => {
         return date.toISOString().split('T')[0];
@@ -45,7 +49,7 @@
     const onLoginSuccess = (username) => {
         user.username = username;  // Assign username after login
         loggedIn = true;
-        retrieveJournalData();  // Retrieve previously saved journal data for the selected date
+        retrieveJournalData();  
     };
 
     // Update journal data based on selected date
@@ -69,6 +73,10 @@
         // Store the data in localStorage with the user's name and the selected date as key
         const formattedDate = selectedDate.toDateString();
         localStorage.setItem(user.username + '_journal_' + formattedDate, JSON.stringify(journalData));
+
+        // Update productivityData for the pie chart
+        productivityData = [skillPractice, yogaDuration, waterIntake];
+
         alert('Journal saved successfully for ' + formattedDate + '!');
     };
 
@@ -88,6 +96,9 @@
             didYoga = journalData.didYoga || false;
             yogaDuration = journalData.yogaDuration || 0;
             waterIntake = journalData.waterIntake || 0;
+
+            // Update productivityData for the pie chart
+            productivityData = [skillPractice, yogaDuration, waterIntake];
         } else {
             // If no data for the selected date, reset the fields
             feelings.forEach(feeling => feeling.checked = false);
@@ -97,6 +108,9 @@
             didYoga = false;
             yogaDuration = 0;
             waterIntake = 0;
+
+            // Reset productivityData
+            productivityData = [0, 0, 0];
         }
     };
 </script>
@@ -112,14 +126,20 @@
         <!-- Main page with all journal components -->
         <UserInfo {user} {currentDate} {daysActive} />
         <Feelings {feelings} />
-        <ImageUpload bind:image  />
+        <ImageUpload bind:image />
         <Reflection bind:dailyReflection />
         <SkillPractice bind:skillPractice />
         <YogaDuration bind:didYoga bind:yogaDuration />
         <WaterIntake bind:waterIntake />
 
         <!-- Submit button to save journal data -->
-        <button on:click={saveJournalData}>Submit</button>
+        <button on:click={saveJournalData} class='submit'>Submit</button>
+
+        <!-- Productivity Pie Chart -->
+        <section>
+            <h2>Productivity Breakdown</h2>
+            <ProductivityChart {productivityData} />
+        </section>
     {/if}
 
     {#if !loggedIn}
@@ -129,29 +149,93 @@
 </main>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+    :root {
+        --primary-color: #6110ee;
+        --primary-color-dark: #3700b3;
+        --accent-color: #03dac6;
+        --text-color: #333;
+        --background-color: #f0f4f8;
+        --error-color: #b00020;
+        --font-family: 'Roboto', sans-serif;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-family);
+        color: var(--text-color);
+        background-color: var(--background-color);
+        line-height: 1.6;
+    }
+
     main {
-        font-family: Arial, sans-serif;
-        margin: 2rem;
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     }
 
     button {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
+        background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
         color: white;
-        background-color: #007bff;
+        padding: 0.75rem 1.5rem;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        margin-top: 1rem;
+        font-size: 1rem;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+        background: linear-gradient(45deg, var(--primary-color-dark), var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: none;
     }
 
     .date-picker {
-        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
     }
 
-    .date-picker input {
+    .date-picker label {
+        font-size: 1rem;
+        margin-right: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .date-picker input[type="date"] {
         padding: 0.5rem;
-        border-radius: 4px;
-        border: 1px solid #ccc;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .submit {
+        background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    section h2 {
+        margin-top: 2rem;
+        color: var(--primary-color);
     }
 </style>

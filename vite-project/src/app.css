@@ -3,10 +3,12 @@
 
 /* CSS Variables for Colors and Fonts */
 :root {
-  --primary-color: #6200ee;
+  --primary-color: #6110ee;
   --primary-color-dark: #3700b3;
+  --accent-color: #03dac6;
   --text-color: #333;
   --background-color: #f0f4f8;
+  --error-color: #b00020;
   --font-family: 'Roboto', sans-serif;
 }
 
@@ -22,6 +24,7 @@ body {
   font-family: var(--font-family);
   color: var(--text-color);
   background-color: var(--background-color);
+  line-height: 1.6;
 }
 
 /* Link Styles */
@@ -56,6 +59,7 @@ a:hover::after {
 h1, h2, h3, h4, h5, h6 {
   color: var(--primary-color);
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 h1 {
@@ -72,12 +76,67 @@ h3 {
 
 /* Main Container */
 main {
-  max-width: 800px;
+  max-width: 900px;
   margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Login Container */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 2rem;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: var(--primary-color-dark);
+}
+
+/* Date Picker Styles */
+.date-picker {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.date-picker label {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  color: var(--text-color);
+}
+
+.date-picker input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 /* Section Styles */
@@ -90,6 +149,7 @@ section {
 /* User Info */
 .user-info {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
 .user-info .date,
@@ -98,35 +158,44 @@ section {
   margin-top: 0.5rem;
 }
 
-/* Activity Tracking */
-.activity-tracking label,
-.activity-tracking textarea {
-  display: block;
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+/* Feelings Section */
+.feelings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* Input and Textarea Styles */
-input[type="file"],
-input[type="number"],
-textarea {
+.feelings label {
+  display: inline-block;
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.feelings input[type="checkbox"] {
+  display: none;
+}
+
+.feelings input[type="checkbox"]:checked + label {
+  background-color: var(--primary-color);
+}
+
+/* Reflection Styles */
+.reflection textarea {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin-top: 0.25rem;
-  font-size: 1rem;
-  font-family: var(--font-family);
-}
-
-textarea {
-  min-height: 100px;
 }
 
 /* Input Focus Styles */
 input[type="file"]:focus,
 input[type="number"]:focus,
-textarea:focus {
+textarea:focus,
+input[type="date"]:focus {
   border-color: var(--primary-color);
   outline: none;
   box-shadow: 0 0 0 2px rgba(98, 0, 238, 0.2);
@@ -155,26 +224,6 @@ button:active {
   box-shadow: none;
 }
 
-/* Feelings Section */
-.feelings label {
-  display: inline-block;
-  margin-right: 1rem;
-}
-
-input[type="checkbox"] {
-  margin-right: 0.5rem;
-}
-
-/* Yoga Duration */
-.yoga-duration {
-  margin-bottom: 1.5rem;
-}
-
-/* Water Intake Buttons */
-.water-buttons button {
-  margin-right: 10px;
-}
-
 /* Progress Bar */
 progress {
   display: block;
@@ -183,7 +232,7 @@ progress {
   margin-bottom: 1rem;
 }
 
-/* Media Query for Responsive Design */
+/* Responsive Styles */
 @media (max-width: 600px) {
   main {
     padding: 1rem;
@@ -197,4 +246,24 @@ progress {
     width: 100%;
     margin-bottom: 1rem;
   }
+
+  .feelings {
+    justify-content: center;
+  }
+
+  .login-container {
+    width: 100%;
+  }
+}
+
+
+.submit {
+  background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s, transform 0.2s;
 }
