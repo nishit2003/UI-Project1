@@ -8,6 +8,7 @@
     import UserInfo from './components/UserInfo.svelte';
     import WaterIntake from './components/WaterIntake.svelte';
     import ProductivityChart from './components/ProductivityChart.svelte';  // Import the chart component
+    import Progress from './components/Progress.svelte';  // Import new Progress component
 
     let loggedIn = false;  // Track if user is logged in
     let user = { username: '', startDate: new Date() };
@@ -37,8 +38,18 @@
     let yogaDuration = 0;
     let waterIntake = 0;
 
+
     // Productivity data for chart
-    let productivityData = [skillPractice, yogaDuration, waterIntake];
+    let productivityData = [skillPractice * 60 , yogaDuration * 6, waterIntake * 80];
+
+    // Progress tracking logic
+    let skillPracticeGoal = 5; // Example: 60 minutes skill practice per day
+    let yogaGoal = 100; // Example: 30 minutes yoga per day
+    let waterGoal = 4; // Example: 2000 ml water intake per day
+
+    let skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
+    let yogaProgress = (yogaDuration / yogaGoal) * 100;
+    let waterIntakeProgress = ((waterIntake) / waterGoal) * 100;
 
     // Helper function to format date as YYYY-MM-DD for input value
     const formatDateForInput = (date) => {
@@ -77,6 +88,11 @@
         // Update productivityData for the pie chart
         productivityData = [skillPractice, yogaDuration, waterIntake];
 
+        // Update progress tracking
+        skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
+        yogaProgress = (yogaDuration / yogaGoal) * 100;
+        waterIntakeProgress = (waterIntake / waterGoal) * 100;
+
         alert('Journal saved successfully for ' + formattedDate + '!');
     };
 
@@ -99,6 +115,11 @@
 
             // Update productivityData for the pie chart
             productivityData = [skillPractice, yogaDuration, waterIntake];
+
+            // Update progress tracking
+            skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
+            yogaProgress = (yogaDuration / yogaGoal) * 100;
+            waterIntakeProgress = (waterIntake / waterGoal) * 100;
         } else {
             // If no data for the selected date, reset the fields
             feelings.forEach(feeling => feeling.checked = false);
@@ -111,6 +132,11 @@
 
             // Reset productivityData
             productivityData = [0, 0, 0];
+
+            // Reset progress tracking
+            skillPracticeProgress = 0;
+            yogaProgress = 0;
+            waterIntakeProgress = 0;
         }
     };
 </script>
@@ -118,27 +144,80 @@
 <main>
     {#if loggedIn}
         <!-- Date picker to select the date for the journal -->
-        <div class="date-picker">
-            <label for="journal-date">Select a date:</label>
-            <input type="date" id="journal-date" value={formatDateForInput(selectedDate)} on:change={onDateChange}>
-        </div>
+        <section class="card date-picker-section">
+            <h2>Select Date</h2>
+            <div class="date-picker">
+                <label for="journal-date">Select a date:</label>
+                <input type="date" id="journal-date" value={formatDateForInput(selectedDate)} on:change={onDateChange}>
+            </div>
+        </section>
+
+        <!-- Goal setting form -->
+        <section class="card goal-section">
+            <h2>Set Your Goals</h2>
+            <form>
+                <label for="skillPracticeGoal">Skill Practice Goal (sessions):</label>
+                <input type="number" id="skillPracticeGoal" bind:value={skillPracticeGoal} min="1">
+
+                <label for="yogaGoal">Yoga Duration Goal (minutes):</label>
+                <input type="number" id="yogaGoal" bind:value={yogaGoal} min="1">
+
+                <label for="waterGoal">Water Intake Goal (liters):</label>
+                <input type="number" id="waterGoal" bind:value={waterGoal} step="0.1" min="0.1">
+            </form>
+        </section>
 
         <!-- Main page with all journal components -->
-        <UserInfo {user} {currentDate} {daysActive} />
-        <Feelings {feelings} />
-        <ImageUpload bind:image />
-        <Reflection bind:dailyReflection />
-        <SkillPractice bind:skillPractice />
-        <YogaDuration bind:didYoga bind:yogaDuration />
-        <WaterIntake bind:waterIntake />
+        <section class="card user-info-section">
+            <h2>User Information</h2>
+            <UserInfo {user} {currentDate} {daysActive} />
+        </section>
+
+        <section class="card feelings-section">
+            <h2>Feelings</h2>
+            <Feelings {feelings} />
+        </section>
+
+        <section class="card image-upload-section">
+            <h2>Upload Image</h2>
+            <ImageUpload bind:image />
+        </section>
+
+        <section class="card reflection-section">
+            <h2>Daily Reflection</h2>
+            <Reflection bind:dailyReflection />
+        </section>
+
+        <section class="card skill-practice-section">
+            <h2>Skill Practice</h2>
+            <SkillPractice bind:skillPractice />
+        </section>
+
+        <section class="card yoga-section">
+            <h2>Yoga Duration</h2>
+            <YogaDuration bind:didYoga bind:yogaDuration />
+        </section>
+
+        <section class="card water-intake-section">
+            <h2>Water Intake</h2>
+            <WaterIntake bind:waterIntake />
+        </section>
 
         <!-- Submit button to save journal data -->
         <button on:click={saveJournalData} class='submit'>Submit</button>
 
         <!-- Productivity Pie Chart -->
-        <section>
+        <section class="card productivity-chart-section">
             <h2>Productivity Breakdown</h2>
             <ProductivityChart {productivityData} />
+        </section>
+
+        <!-- Progress tracking for habits -->
+        <section class="card progress-tracking-section">
+            <h2>Progress Tracking</h2>
+            <Progress habitProgress={skillPracticeProgress} habitName="Skill Practice" />
+            <Progress habitProgress={yogaProgress} habitName="Yoga Duration" />
+            <Progress habitProgress={waterIntakeProgress} habitName="Water Intake" />
         </section>
     {/if}
 
@@ -148,94 +227,5 @@
     {/if}
 </main>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-    :root {
-        --primary-color: #6110ee;
-        --primary-color-dark: #3700b3;
-        --accent-color: #03dac6;
-        --text-color: #333;
-        --background-color: #f0f4f8;
-        --error-color: #b00020;
-        --font-family: 'Roboto', sans-serif;
-    }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: var(--font-family);
-        color: var(--text-color);
-        background-color: var(--background-color);
-        line-height: 1.6;
-    }
-
-    main {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: #fff;
-        border-radius: 16px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    button {
-        background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background 0.3s, transform 0.2s;
-    }
-
-    button:hover {
-        background: linear-gradient(45deg, var(--primary-color-dark), var(--primary-color));
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    button:active {
-        transform: translateY(0);
-        box-shadow: none;
-    }
-
-    .date-picker {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .date-picker label {
-        font-size: 1rem;
-        margin-right: 0.5rem;
-        color: var(--text-color);
-    }
-
-    .date-picker input[type="date"] {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-
-    .submit {
-        background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background 0.3s, transform 0.2s;
-    }
-
-    section h2 {
-        margin-top: 2rem;
-        color: var(--primary-color);
-    }
-</style>

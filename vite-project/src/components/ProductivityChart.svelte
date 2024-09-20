@@ -33,7 +33,7 @@
                     tooltip: {
                         callbacks: {
                             label: function (tooltipItem) {
-                                return tooltipItem.label + ': ' + tooltipItem.raw + ' minutes';
+                                return tooltipItem.label + ': ' + tooltipItem.raw ;
                             }
                         }
                     }

@@ -31,8 +31,26 @@
 </div>
 
 <style>
+    .water-buttons {
+        display: flex;
+        justify-content: space-between; /* Evenly space the buttons */
+        margin-top: 1rem; /* Optional: Add some margin above the button row */
+    }
+
     .water-buttons button {
-        margin-right: 10px;
+        flex: 1; 
+        margin: 0 25px; /* Add a small margin between buttons */
+        padding: 0.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: var(--primary-color);
+        color: white;
+        transition: background 0.3s ease;
+    }
+
+    .water-buttons button:hover {
+        background-color: var(--primary-color-dark);
     }
 
     progress {

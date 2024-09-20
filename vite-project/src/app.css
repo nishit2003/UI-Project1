@@ -1,5 +1,5 @@
 /* Import Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 /* CSS Variables for Colors and Fonts */
 :root {
@@ -7,9 +7,17 @@
   --primary-color-dark: #3700b3;
   --accent-color: #03dac6;
   --text-color: #333;
+  --background-color: rgba(240, 244, 248, 0.9);  /* Transparent white for cards */
+  --card-background-color: rgba(255, 255, 255, 0.8);  /* Transparent white */
+  --card-border-color: rgba(255, 255, 255, 0.3);  /* Transparent border */
   --background-color: #f0f4f8;
+  --card-background-color: #fff;
+  --card-border-color: #ddd;
   --error-color: #b00020;
-  --font-family: 'Roboto', sans-serif;
+  --info-color: #3498db;  /* Light Blue */
+  --success-color: #27ae60;  /* Green */
+  --warning-color: #f39c12;  /* Orange */
+  --font-family: "Roboto", sans-serif;
 }
 
 /* Reset and Box Sizing */
@@ -22,66 +30,128 @@
 /* Body Styles */
 body {
   font-family: var(--font-family);
+    background: url('/src/assets/15309283626_fd44aa8fb2_k.jpg') no-repeat center center fixed;
+
   color: var(--text-color);
   background-color: var(--background-color);
   line-height: 1.6;
-}
-
-/* Link Styles */
-a {
-  font-weight: 500;
-  color: var(--primary-color);
-  text-decoration: none;
-  position: relative;
-  transition: color 0.3s;
-}
-
-a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0%;
-  height: 2px;
-  background-color: var(--primary-color);
-  transition: width 0.3s;
-}
-
-a:hover {
-  color: var(--primary-color-dark);
-}
-
-a:hover::after {
-  width: 100%;
-}
-
-/* Heading Styles */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--primary-color);
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-h1 {
-  font-size: 2.5rem;
-}
-
-h2 {
-  font-size: 2rem;
-}
-
-h3 {
-  font-size: 1.5rem;
 }
 
 /* Main Container */
 main {
   max-width: 900px;
   margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 1rem auto;
+}
+
+/* Card Layout for Sections */
+.card {
+  background-color: var(--card-background-color);
+  border: 1px solid var(--card-border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card h2 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+/* Form Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input[type="number"],
+input[type="date"] {
+  padding: 0.75rem;
+  border: 1px solid var(--card-border-color);
+  border-radius: 8px;
+}
+
+label {
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+/* Submit Button */
+.submit {
+  background: linear-gradient(45deg, var(--primary-color), var(--info-color)); /* Blue and purple gradient */
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s, transform 0.2s;
+  display: block;
+  margin: 2.5rem auto 2.5rem auto;
+  width: 50%;
+  text-align: center;
+}
+
+.submit:hover {
+  background: linear-gradient(45deg, var(--info-color), var(--primary-color-dark)); /* Inverted gradient */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Specific Styles */
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Feelings Section */
+.feelings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feelings label {
+  padding: 0.5rem 1rem;
+  background-color: var(--success-color);  /* Green */
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.feelings input[type="checkbox"]:checked + label {
+  background-color: var(--warning-color);  /* Orange for checked */
+}
+
+/* Reflection Section */
+.reflection textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Progress Bars */
+progress {
+  display: block;
+  width: 100%;
+  height: 20px;
+  margin-bottom: 1rem;
+}
+
+/* User Info Section */
+.user-info {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.user-info .date,
+.user-info .active-days {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
 }
 
 /* Login Container */
@@ -91,7 +161,7 @@ main {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background-color: #fff;
+  background-color: var(--card-background-color);
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -116,120 +186,64 @@ main {
   transition: background 0.3s ease;
 }
 
-.login-container button:hover {
+.login-container button:hover { 
   background-color: var(--primary-color-dark);
 }
 
-/* Date Picker Styles */
-.date-picker {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.date-picker label {
-  font-size: 1rem;
-  margin-right: 0.5rem;
-  color: var(--text-color);
-}
-
-.date-picker input[type="date"] {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-/* Section Styles */
-section {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-/* User Info */
-.user-info {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.user-info .date,
-.user-info .active-days {
-  font-size: 1.1rem;
-  margin-top: 0.5rem;
-}
-
-/* Feelings Section */
-.feelings {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.feelings label {
-  display: inline-block;
-  margin-right: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--accent-color);
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.feelings input[type="checkbox"] {
-  display: none;
-}
-
-.feelings input[type="checkbox"]:checked + label {
-  background-color: var(--primary-color);
-}
-
-/* Reflection Styles */
-.reflection textarea {
+/* Yoga Duration and Slider Styles */
+.yoga-slider input[type="range"] {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
 }
 
-/* Input Focus Styles */
-input[type="file"]:focus,
-input[type="number"]:focus,
-textarea:focus,
-input[type="date"]:focus {
-  border-color: var(--primary-color);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(98, 0, 238, 0.2);
+.yoga-slider label {
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
-/* Button Styles */
-button {
-  background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
-  color: white;
-  padding: 0.75rem 1.5rem;
+/* Water Intake Buttons */
+.water-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.water-buttons button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 0.5rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s, transform 0.2s;
+  background-color: var(--success-color); /* Green */
+  color: white;
+  transition: background 0.3s ease;
 }
 
-button:hover {
-  background: linear-gradient(45deg, var(--primary-color-dark), var(--primary-color));
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.water-buttons button:hover {
+  background-color: var(--info-color); /* Light blue on hover */
 }
 
-button:active {
-  transform: translateY(0);
-  box-shadow: none;
+/* Yes/No Buttons for Yoga */
+.yes-no-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
 }
 
-/* Progress Bar */
-progress {
-  display: block;
-  width: 100%;
-  height: 20px;
-  margin-bottom: 1rem;
+.yes-no-buttons label {
+  flex: 1;
+  text-align: center;
+  margin: 0 5px;
+  cursor: pointer;
+  background-color: var(--warning-color);  /* Orange */
+  padding: 0.5rem;
+  border-radius: 8px;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.yes-no-buttons label:hover {
+  background-color: var(--primary-color);  /* Purple on hover */
 }
 
 /* Responsive Styles */
@@ -247,6 +261,10 @@ progress {
     margin-bottom: 1rem;
   }
 
+  .submit {
+    width: 100%;
+  }
+
   .feelings {
     justify-content: center;
   }
@@ -254,16 +272,4 @@ progress {
   .login-container {
     width: 100%;
   }
-}
-
-
-.submit {
-  background: linear-gradient(45deg, var(--primary-color), var(--primary-color-dark));
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s, transform 0.2s;
 }
