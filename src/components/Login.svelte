@@ -98,8 +98,8 @@
         <input type="text" bind:value={username} placeholder="Username" />
         <input type="password" bind:value={password} placeholder="Password" />
         <button on:click={handleSubmit}>{isLogin ? 'Login' : 'Sign Up'}</button>
-        <p on:click={toggleMode}>
+        <button on:click={toggleMode}>
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}
-        </p>
+        </button>
     </div>
 </div>
