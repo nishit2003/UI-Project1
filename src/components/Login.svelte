@@ -84,11 +84,7 @@
         color: white;
         cursor: pointer;
     }
-    p {
-        margin-top: 1rem;
-        cursor: pointer;
-        color: #007bff;
-    }
+    
 </style>
 
 <div class="login-container">
