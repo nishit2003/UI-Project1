@@ -64,9 +64,11 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background: linear-gradient(135deg, #4ca1af, #c4e0e5); /* Soft gradient background */
+        background: var(--login-container-bg); /* Soft gradient background */
         font-family: 'Arial', sans-serif;
         padding: 1rem;
+        transition: background 0.3s ease-in-out; /* Smooth transition when changing theme */
+
     }
 
     .header {
