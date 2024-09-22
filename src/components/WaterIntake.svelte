@@ -9,11 +9,11 @@
 
     export let waterIntake = 0; // Add this to handle two-way binding
 
-    $: progress.set(waterIntake);  // Update progress when waterIntake changes
+    $: progress.set(waterIntake / 4);  // Update progress when waterIntake changes
 
-    export function setWaterIntake(percentage) {
-        waterIntake = percentage;
-        progress.set(percentage);
+    export function setWaterIntake(litres) {
+        waterIntake = litres;
+        progress.set(litres / 4);
     }
 </script>
 
@@ -23,10 +23,10 @@
 
     <div class="water-buttons">
         <button on:click={() => setWaterIntake(0)}> 0L </button>
-        <button on:click={() => setWaterIntake(0.25)}> 1L </button>
-        <button on:click={() => setWaterIntake(0.5)}> 2L </button>
-        <button on:click={() => setWaterIntake(0.75)}> 3L </button>
-        <button on:click={() => setWaterIntake(1)}> 4L </button>
+        <button on:click={() => setWaterIntake(1)}> 1L </button>
+        <button on:click={() => setWaterIntake(2)}> 2L </button>
+        <button on:click={() => setWaterIntake(3)}> 3L </button>
+        <button on:click={() => setWaterIntake(4)}> 4L </button>
     </div>
 </div>
 

@@ -1,11 +1,11 @@
-<!-- SkillPractice.svelte -->
 <script>
     export let skillPractice;
+    export let skill;  // Receive the skill from parent component
 </script>
 
 <div class="skill-practice">
-    <h3>Skill Practice</h3>
-    <label for="skill">Time spent practicing a skill (hours):</label>
+    <h3>{skill} Practice</h3>
+    <label for="skill">Time spent practicing {skill} (hours):</label>
     <input type="number" id="skill" bind:value={skillPractice} min="0" max="24">
 </div>
 

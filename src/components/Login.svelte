@@ -3,6 +3,7 @@
     
     let username = '';
     let password = '';
+    let Name = '';
     let isLogin = true;  // Toggle between login and sign-up
     const dispatch = createEventDispatcher(); // Create dispatcher to send login event
 
@@ -11,8 +12,8 @@
         const storedUser = JSON.parse(localStorage.getItem(username));
         
         if (storedUser && storedUser.password === password) {
-            alert(`Welcome back, ${username}!`);
-            dispatch('login', username);  // Emit login event with username
+            alert(`Welcome back, ${Name}!`);
+            dispatch('login', { username, Name });  // Emit login event with username
         } else {
             alert('Invalid username or password.');
         }
@@ -25,7 +26,7 @@
         if (storedUser) {
             alert('User already exists. Please login.');
         } else {
-            const newUser = { username, password };
+            const newUser = { username, password, Name };
             localStorage.setItem(username, JSON.stringify(newUser));
             alert('Account created! Please login.');
             isLogin = true;  // Switch back to login mode
@@ -93,6 +94,7 @@
         <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
         <input type="text" bind:value={username} placeholder="Username" />
         <input type="password" bind:value={password} placeholder="Password" />
+        <input type="text" bind:value={Name} placeholder="Name" />
         <button on:click={handleSubmit}>{isLogin ? 'Login' : 'Sign Up'}</button>
         <button on:click={toggleMode}>
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}

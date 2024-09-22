@@ -14,7 +14,7 @@
     let user = { username: '', startDate: new Date() };
     let currentDate = new Date();  // Current date for user information
     let selectedDate = new Date();  // Default is today's date
-    let daysActive = 15;
+    let daysActive = 1;
 
     // Journal Data
     let feelings = [
@@ -37,7 +37,7 @@
     let didYoga = false;
     let yogaDuration = 0;
     let waterIntake = 0;
-
+    let skill = '';
 
     // Productivity data for chart
     let productivityData = [skillPractice * 60 , yogaDuration * 6, waterIntake * 80];
@@ -48,8 +48,8 @@
     let waterGoal = 4; // Example: 2000 ml water intake per day
 
     let skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
-    let yogaProgress = (yogaDuration / yogaGoal) * 100;
-    let waterIntakeProgress = ((waterIntake) / waterGoal) * 100;
+    let yogaProgress = (yogaDuration / yogaGoal) * 4;
+    let waterIntakeProgress = ((waterIntake) / waterGoal) * 4;
 
     // Helper function to format date as YYYY-MM-DD for input value
     const formatDateForInput = (date) => {
@@ -57,10 +57,15 @@
     };
 
     // Handle login success and retrieve stored data
-    const onLoginSuccess = (username) => {
-        user.username = username;  // Assign username after login
+    const onLoginSuccess = (event) => {
+        user.username = event.detail.username;  // Assign username after login
+        user.Name = event.detail.Name;  // Assign username after login
         loggedIn = true;
         retrieveJournalData();  
+
+        setTimeout(() => {
+            skill = prompt(`What skill would you like to work on today, ${user.Name}?`) || 'Skill';  // Fallback to 'Skill' if input is empty
+    }, 100);
     };
 
     // Update journal data based on selected date
@@ -82,6 +87,7 @@
         };
 
         // Store the data in localStorage with the user's name and the selected date as key
+        selectedDate.setDate(selectedDate.getDate() + 1);
         const formattedDate = selectedDate.toDateString();
         localStorage.setItem(user.username + '_journal_' + formattedDate, JSON.stringify(journalData));
 
@@ -119,7 +125,7 @@
             // Update progress tracking
             skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
             yogaProgress = (yogaDuration / yogaGoal) * 100;
-            waterIntakeProgress = (waterIntake / waterGoal) * 100;
+            waterIntakeProgress = (waterIntake / waterGoal);
         } else {
             // If no data for the selected date, reset the fields
             feelings.forEach(feeling => feeling.checked = false);
@@ -143,6 +149,12 @@
 
 <main>
     {#if loggedIn}
+
+        <section class="card user-info-section">
+            <h2>User Information</h2>
+            <UserInfo {user}  />
+        </section>
+
         <!-- Date picker to select the date for the journal -->
         <section class="card date-picker-section">
             <h2>Select Date</h2>
@@ -156,7 +168,7 @@
         <section class="card goal-section">
             <h2>Set Your Goals</h2>
             <form>
-                <label for="skillPracticeGoal">Skill Practice Goal (sessions):</label>
+                <label for="skillPracticeGoal">{skill} Practice Goal (Hours):</label>
                 <input type="number" id="skillPracticeGoal" bind:value={skillPracticeGoal} min="1">
 
                 <label for="yogaGoal">Yoga Duration Goal (minutes):</label>
@@ -168,10 +180,7 @@
         </section>
 
         <!-- Main page with all journal components -->
-        <section class="card user-info-section">
-            <h2>User Information</h2>
-            <UserInfo {user} {currentDate} {daysActive} />
-        </section>
+        
 
         <section class="card feelings-section">
             <h2>Feelings</h2>
@@ -179,7 +188,7 @@
         </section>
 
         <section class="card image-upload-section">
-            <h2>Upload Image</h2>
+            <h2>Upload Image // Highlight of the Day</h2>
             <ImageUpload bind:image />
         </section>
 
@@ -189,8 +198,8 @@
         </section>
 
         <section class="card skill-practice-section">
-            <h2>Skill Practice</h2>
-            <SkillPractice bind:skillPractice />
+            <h2>{skill} Practice</h2>
+            <SkillPractice bind:skillPractice {skill} />
         </section>
 
         <section class="card yoga-section">
