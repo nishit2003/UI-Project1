@@ -192,9 +192,15 @@
 
 <main>
   <section class="theme-toggle">
-    <label for="themeSwitch">Dark Mode</label>
-    <input type="checkbox" id="themeSwitch" on:change={toggleTheme} />
-  </section>
+  <button class="theme-toggle-button" on:click={toggleTheme}>
+    {#if isDarkMode}
+      ☀️ Light Mode
+    {/if}
+    {#if !isDarkMode}
+      🌙 Dark Mode
+    {/if}
+  </button>
+</section>
 
   {#if loggedIn}
     <section class="card user-info-section">
