@@ -273,3 +273,36 @@ progress {
     width: 100%;
   }
 }
+
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between; /* Ensures the button is to the right */
+}
+
+.fetch-button {
+  background-color: #4a90e2; /* Matches the deep blue theme */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-left: auto; /* Pushes the button to the right */
+}
+
+.fetch-button:hover {
+  background-color: #357ABD; /* Darker blue for hover */
+}
+
+.fetch-button:active {
+  background-color: #2C5A9B; /* Even darker blue for active state */
+}
+
+.fetch-button:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(74, 144, 226, 0.5); /* Light blue focus glow */
+}

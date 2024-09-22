@@ -87,7 +87,7 @@
         };
 
         // Store the data in localStorage with the user's name and the selected date as key
-        selectedDate.setDate(selectedDate.getDate() + 1);
+
         const formattedDate = selectedDate.toDateString();
         localStorage.setItem(user.username + '_journal_' + formattedDate, JSON.stringify(journalData));
 
@@ -143,8 +143,22 @@
             skillPracticeProgress = 0;
             yogaProgress = 0;
             waterIntakeProgress = 0;
+
         }
     };
+
+    // Function to handle fetching journal data or showing an alert if no data is found
+    const handleJournalFetch = () => {
+    const formattedDate = selectedDate.toISOString().split('T')[0];  // Format as YYYY-MM-DD
+        const savedJournalData = localStorage.getItem(user.username + '_journal_' + formattedDate);
+
+        if (savedJournalData) {
+            retrieveJournalData();  // Fetch and populate journal data if it exists
+        } else {
+            alert(`No journal data found for ${formattedDate}.`);  // Show alert if no data found
+        }
+    };
+
 </script>
 
 <main>
@@ -161,6 +175,9 @@
             <div class="date-picker">
                 <label for="journal-date">Select a date:</label>
                 <input type="date" id="journal-date" value={formatDateForInput(selectedDate)} on:change={onDateChange}>
+
+            <!-- Button to fetch data for the selected date -->
+            <button on:click={handleJournalFetch} class="fetch-button">Fetch Journal Data</button>
             </div>
         </section>
 
