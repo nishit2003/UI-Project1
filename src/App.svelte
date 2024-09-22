@@ -40,7 +40,7 @@
     let skill = '';
 
     // Productivity data for chart
-    let productivityData = [skillPractice * 60 , yogaDuration * 6, waterIntake * 80];
+    let productivityData = [skillPractice * 60 , yogaDuration / 60 , waterIntake * 80];
 
     // Progress tracking logic
     let skillPracticeGoal = 5; // Example: 60 minutes skill practice per day
@@ -92,7 +92,7 @@
         localStorage.setItem(user.username + '_journal_' + formattedDate, JSON.stringify(journalData));
 
         // Update productivityData for the pie chart
-        productivityData = [skillPractice, yogaDuration, waterIntake];
+        productivityData = [skillPractice, yogaDuration / 60, waterIntake];
 
         // Update progress tracking
         skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
@@ -120,7 +120,7 @@
             waterIntake = journalData.waterIntake || 0;
 
             // Update productivityData for the pie chart
-            productivityData = [skillPractice, yogaDuration, waterIntake];
+            productivityData = [skillPractice, yogaDuration/60, waterIntake];
 
             // Update progress tracking
             skillPracticeProgress = (skillPractice / skillPracticeGoal) * 100;
