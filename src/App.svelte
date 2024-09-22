@@ -16,13 +16,24 @@
   let currentDate = new Date(); // Current date for user information
   let selectedDate = new Date(); // Default is today's date
   let daysActive = 1;
-  
+
   // Additional activity tracking
   let AddYes = false; // Whether to add an additional activity
   let additionalActivityName = ""; // The name of the additional activity
   let inputType = ""; // The type of input for the additional activity
   let activityValue = 0; // Value for the additional activity
 
+  // Theme toggle state
+  let isDarkMode = false;
+
+  // Helper to toggle between themes
+  const toggleTheme = () => {
+    isDarkMode = !isDarkMode;
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDarkMode ? "dark" : "light"
+    );
+  };
   // Journal Data
   let feelings = [
     { mood: "Happy", checked: false },
@@ -180,6 +191,11 @@
 </script>
 
 <main>
+  <section class="theme-toggle">
+    <label for="themeSwitch">Dark Mode</label>
+    <input type="checkbox" id="themeSwitch" on:change={toggleTheme} />
+  </section>
+
   {#if loggedIn}
     <section class="card user-info-section">
       <h2>User Information</h2>
