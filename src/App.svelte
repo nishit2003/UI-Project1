@@ -183,7 +183,8 @@
     );
 
     if (savedJournalData) {
-      retrieveJournalData(); // Fetch and populate journal data if it exists
+      retrieveJournalData();
+      alert(`Journal data found for ${formattedDate}.`);
     } else {
       alert(`No journal data found for ${formattedDate}.`); // Show alert if no data found
     }
