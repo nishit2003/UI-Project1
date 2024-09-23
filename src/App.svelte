@@ -131,7 +131,7 @@
 
   // Retrieve journal data from localStorage and populate the fields for the selected date
   const retrieveJournalData = () => {
-    const formattedDate = selectedDate.toDateString();
+    const formattedDate = selectedDate.toISOString().split("T")[0];
     const savedJournalData = localStorage.getItem(
       user.username + "_journal_" + formattedDate
     );
@@ -192,15 +192,15 @@
 
 <main>
   <section class="theme-toggle">
-  <button class="theme-toggle-button" on:click={toggleTheme}>
-    {#if isDarkMode}
-      ☀️ Light Mode
-    {/if}
-    {#if !isDarkMode}
-      🌙 Dark Mode
-    {/if}
-  </button>
-</section>
+    <button class="theme-toggle-button" on:click={toggleTheme}>
+      {#if isDarkMode}
+        ☀️ Light Mode
+      {/if}
+      {#if !isDarkMode}
+        🌙 Dark Mode
+      {/if}
+    </button>
+  </section>
 
   {#if loggedIn}
     <section class="card user-info-section">
