@@ -119,13 +119,14 @@ body {
 /* Body Styles */
 body {
   font-family: var(--font-family);
-  background: url("/src/assets/15309283626_fd44aa8fb2_k.jpg") no-repeat center
-    center fixed;
-
+  background: url("/src/assets/15309283626_fd44aa8fb2_k.jpg") no-repeat center center fixed;
+  background-size: cover; /* This makes the image cover the entire background */
+  
   color: var(--text-color);
   background-color: var(--background-color);
   line-height: 1.6;
 }
+
 
 /* Main Container */
 main {
