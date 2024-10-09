@@ -1,5 +1,4 @@
 <script>
-  import Login from "./components/Login.svelte";
   import Feelings from "./components/Feelings.svelte";
   import ImageUpload from "./components/ImageUpload.svelte";
   import Reflection from "./components/Reflection.svelte";
