@@ -9,6 +9,7 @@
   import ProductivityChart from "./components/ProductivityChart.svelte"; // Import the chart component
   import Progress from "./components/Progress.svelte"; // Import new Progress component
   import AdditionalActivity from "./components/AdditionalActivity.svelte";
+  import Login from "./components/Login.svelte";
 
   let loggedIn = false; // Track if user is logged in
   let user = { username: "", startDate: new Date() };
